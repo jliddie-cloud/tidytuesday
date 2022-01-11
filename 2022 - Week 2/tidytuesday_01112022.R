@@ -42,4 +42,4 @@ ggplot(colony, aes(x = date.order, y = colony_p_max)) +
     labs(x = NULL, y = NULL,
          title = "Percentage of maximum bee colonies in 45 states",
          subtitle = "Data span Q1 2015 to Q2 2021",
-         caption = "Visualization by @jmliddie, TidyTuesday Week 2 ")
+         caption = "Data from USDA. Visualization by @jmliddie. TidyTuesday Week 2")
