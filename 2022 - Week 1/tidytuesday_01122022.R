@@ -129,4 +129,3 @@ cowplot::plot_grid(g1, g2, nrow = 2, ncol = 1, align = "v")
 
 # save plot
 ggsave("COVID_MWRA.png", width = 6, height = 7)
-
