@@ -37,9 +37,11 @@ ggplot(colony, aes(x = date.order, y = colony_p_max)) +
   theme_minimal() +
   theme(plot.title = element_text(margin=margin(t=15), hjust=0.5, lineheight = 1.4, size=14),
         plot.caption = element_text(hjust=0, color = "grey", lineheight = 1.4, size=8),
-        plot.subtitle = element_text(hjust=.5, size=10, margin=margin(b=10))) +
+        plot.subtitle = element_text(hjust=.5, size=10, margin=margin(b=10)),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) +
     facet_geo(~state, grid = my_grid, label = "name") +
-    labs(x = NULL, y = NULL,
+    labs(x = NULL, y = NULL, 
          title = "Percentage of maximum bee colonies in 45 states",
          subtitle = "Data span Q1 2015 to Q2 2021",
          caption = "Data from USDA. Visualization by @jmliddie. TidyTuesday Week 2")
