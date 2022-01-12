@@ -55,8 +55,6 @@ suffolk.covid.week <- suffolk.covid %>%
 all.dat <- left_join(mwra, suffolk.covid.week, 
                      by = c("sampling_week" = "beg_week"))
 
-all.dat$lag_WW <- lag(x = all.dat$normalized_concentration_rolling_average, 
-                      n = 1)
 ### plotting
 # for scaling second axes
 coef.g1 <- mean(all.dat$normalized_concentration_rolling_average) /
@@ -80,7 +78,7 @@ g1 <-
     data = all.dat,
     aes(y = normalized_concentration_rolling_average/coef.g1,
         x = sampling_week),
-    size = 2, color = "darkgreen", linetype = "dotted"
+    size = 1, color = "darkgreen", linetype = "dotted"
   ) +
   scale_y_continuous(
     name = "Cases (7-day avg.)",
@@ -91,13 +89,13 @@ g1 <-
   theme(
     axis.title.y = element_text(color = "darkblue", size=10),
     axis.title.y.right = element_text(color = "darkgreen", size=10),
-    plot.subtitle = element_markdown(hjust=.5, size=14, margin=margin(b=10)),
+    plot.subtitle = element_markdown(hjust=.5, size=12, margin=margin(b=10)),
     plot.title = element_text(hjust=0.5, 
                               lineheight = 1.4, size=16, margin=margin(b=10)),
     axis.text.x = element_blank()
   ) +
   labs(title = "COVID-19 cases and wastewater concentrations",
-       subtitle = "*7-day avg. cases in Suffolk County, MA*",
+       subtitle = "*Rolling avg. cases in Suffolk County, MA*",
        x = "")
 
 g2 <- 
@@ -117,18 +115,18 @@ g2 <-
     theme(
       axis.title.y = element_text(color = "darkblue", size=10),
       axis.title.y.right = element_text(color = "darkgreen", size=10),
-      plot.subtitle = element_markdown(hjust=.5, size=14, margin=margin(b=10)),
+      plot.subtitle = element_markdown(hjust=.5, size=12, margin=margin(b=10)),
       plot.caption = element_text(hjust=0, color = "darkgrey", 
-                                  lineheight = 1.4, size=8, margin=margin(t=15)),
+                                  lineheight = 1.4, size=6, margin=margin(t=15)),
     ) +
   labs(subtitle = 
          paste("*Weekly total cases in Suffolk, MA (r = ",
                round(corr, 2), ")*", sep = ""),
        x = "Date",
-       caption = "Estimate using Spearman's rank correlation shown above. COVID-19 data from NYT and wastewater data from BioBot / MWRA | Visualization by @jmliddie | #TidyTuesday Week 1")
+       caption = "Correlation estimate based on Spearman's rank correlation. COVID-19 data from NYT and wastewater data from BioBot / MWRA\nVisualization by @jmliddie | #TidyTuesday Week 1")
 
 cowplot::plot_grid(g1, g2, nrow = 2, ncol = 1, align = "v")
 
 # save plot
-ggsave("COVID_MWRA.png", width = 6, height = 8)
+ggsave("COVID_MWRA.png", width = 6, height = 7)
 
