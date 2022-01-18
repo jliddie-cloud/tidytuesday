@@ -1,6 +1,6 @@
 ################################################################################
 # author: Jahred Liddie (@jmliddie)
-# purpose: tidytuesday, week 1
+# purpose: tidytuesday, week 3
 ################################################################################
 
 # library(tidytuesdayR)
@@ -51,11 +51,11 @@ ggplot(chocolate_sankey,
         plot.title = element_markdown(hjust=0.5, face = "bold", color = "sienna4",
                                   lineheight = 1.4, size=14, margin=margin(b=5)),
         plot.subtitle = element_markdown(hjust=.5, size=10, color = "sienna4")) +
-  labs(caption = "Visualization by @jmliddie | #TidyTuesday Week 3",
+  labs(caption = "Visualization by @jmliddie | #TidyTuesday Week 3 | Data from Flavors of Cacao",
        subtitle = "Sankey diagram of the origins and company locations of chocolate with over 85% cocoa",
        title = "*Dark chocolate: where does it come from & where does it go?*",
        x = NULL)
 
 # save plot
-ggsave("chocolate_sankey.png", width = 9, height = 7)
+ggsave("chocolate_sankey.png", width = 7, height = 7)
 
