@@ -12,16 +12,20 @@ library(ggtext)
 # set file loc as WD
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
+# load data
 chocolate <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-18/chocolate.csv')
 
+# make % num
 chocolate$cocoa_percent <- as.numeric(
   str_replace(chocolate$cocoa_percent, pattern = "%", replacement = "")
 )
 
+# convert to sankey-friendly data
 chocolate_sankey <- chocolate %>%
   filter(cocoa_percent > 85) %>% # filter for cocoa 85%+
   ggsankey::make_long(country_of_bean_origin, company_location)
 
+# indicators for continuous colors
 chocolate_sankey <- chocolate_sankey %>% 
   group_by(node) %>%
   mutate(node_fill = cur_group_id())%>%
@@ -32,6 +36,7 @@ chocolate_sankey <- chocolate_sankey %>%
                              labels = c("Origin", "Company location"))
 )
 
+# plot
 ggplot(chocolate_sankey, 
        aes(x = x, next_x = next_x, node = node, 
            next_node = next_node, fill = node_fill, label = node)) +
@@ -47,7 +52,7 @@ ggplot(chocolate_sankey,
                                   lineheight = 1.4, size=14, margin=margin(b=5)),
         plot.subtitle = element_markdown(hjust=.5, size=10, color = "sienna4")) +
   labs(caption = "Visualization by @jmliddie | #TidyTuesday Week 3",
-       subtitle = "Origins and company locations of chocolate with over 85% cocoa",
+       subtitle = "Sankey diagram of the origins and company locations of chocolate with over 85% cocoa",
        title = "*Dark chocolate: where does it come from & where does it go?*",
        x = NULL)
 
