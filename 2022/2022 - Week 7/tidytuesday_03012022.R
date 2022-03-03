@@ -62,7 +62,6 @@ ggplot(nhood_stations) +
   scale_fill_identity() +
   geom_sf(size = 0.25, color = "yellow") +
   geom_sf(data = water, fill = "lightblue", color = NA) +
-  annotation_scale(location = "br") +
   theme_map() + 
   labs(title = "Electric charging stations in\nBoston neighorboods",
        caption = "Visualization by @jmliddie | #tidytuesday week 9 | Data from US DOT") +
