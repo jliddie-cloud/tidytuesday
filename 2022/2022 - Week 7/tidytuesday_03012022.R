@@ -30,6 +30,7 @@ nhoods <- nhoods %>%
 water <- water %>%
   st_transform(MA_state_plane)
 
+# link with stations
 nhoods <- st_make_valid(nhoods)
 
 nhood_stations <- st_intersection(MA_stations, nhoods)
@@ -48,10 +49,6 @@ nhoods <- nhoods %>%
 
 max.station.nhood <- nhoods$Name[nhoods$num_stations == max(nhoods$num_stations)]
 max.density.nhood <- nhoods$Name[nhoods$station_dens == max(nhoods$station_dens)]
-
-# bounding boxes
-left_side  <- st_bbox(nhood_stations)$xmin
-top_side <- st_bbox(nhood_stations)$ymax 
 
 # all fonts
 font_add_google("Josefin Sans")
