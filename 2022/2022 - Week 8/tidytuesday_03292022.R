@@ -16,7 +16,7 @@ showtext_auto(enable = TRUE)
 tennis <- sports %>% 
   filter(sports == "Tennis" & !is.na(total_exp_menwomen))
 
-# expenditures per player
+# expenditures per player and general sector name
 tennis <- tennis %>% mutate(
   exp_p_player = total_exp_menwomen / (sum_partic_men + sum_partic_women),
   general_sector = case_when(grepl("Private nonprofit", sector_name) ~ "Private, non-profit",
@@ -25,7 +25,6 @@ tennis <- tennis %>% mutate(
                              )
 )
 
-# tennis data
 tennis <- tennis %>%
   mutate(general_sector = factor(general_sector, levels = c("Private, non-profit",
                                                             "Private, for-profit",
@@ -33,7 +32,7 @@ tennis <- tennis %>%
                                  )
          )
 
-# calculate medians in 2019
+# calculate medians
 median_exp_p_player <- tennis %>% 
   group_by(year) %>%
   summarise(median_total = mean(exp_p_player)) %>%
