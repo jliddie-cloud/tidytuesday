@@ -33,19 +33,6 @@ showtext_auto(enable = TRUE)
 summary.counts %>% 
   filter(answer.length <= 15 & answer.length > 2) %>%
   ggplot(aes(x = first.letter,y = answer.length, fill = Freq)) +
-  geom_tile() +
-  scale_fill_gradient(low = "white", high = "blue", name = "") +
-  coord_cartesian(ylim = c(3, 15)) +
-  scale_y_continuous(breaks = c(3:15)) +
-  labs(x = "First letter", y = "Answer length") +
-  theme_minimal() +
-  theme(text = element_text(family = "Noto Serif"),
-        panel.grid = element_blank(),
-        legend.position = "none")
-  
-summary.counts %>% 
-  filter(answer.length <= 15 & answer.length > 2) %>%
-  ggplot(aes(x = first.letter,y = answer.length, fill = Freq)) +
   geom_raster() +
   scale_fill_gradientn(colors = met.brewer("OKeeffe2"), name = "") +
   coord_cartesian(ylim = c(3, 15)) +
