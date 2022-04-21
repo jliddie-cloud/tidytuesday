@@ -51,7 +51,7 @@ summary.counts %>%
   coord_cartesian(ylim = c(3, 15)) +
   scale_y_continuous(breaks = c(3:15)) +
   labs(x = "", y = "", title = "A NEW YORK TIMES CROSSWORD HEATMAP",
-       subtitle = "Frequencies of the first letter & word length from over 100,000 answers",
+       subtitle = "Frequencies of the first letter & answer length from over 100,000 answers",
        caption = "Visualization by @jmliddie | #tidytuesday week 16 | Data from Cryptic Crossword Clues") +
   theme_minimal() +
   theme(panel.grid = element_blank(),
