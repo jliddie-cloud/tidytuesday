@@ -9,6 +9,8 @@ library(MetBrewer)
 
 sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-29/sports.csv')
 
+sports <- sports %>%
+  mutate(exp_p_player = total_exp_menwomen / (sum_partic_men + sum_partic_women))
 font_add_google("Playfair Display")
 showtext_auto(enable = TRUE)
 
