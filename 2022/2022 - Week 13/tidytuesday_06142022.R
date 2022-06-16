@@ -42,8 +42,8 @@ font_add_google("PT Serif")
 showtext_auto(enable = TRUE)
 
 anim.ts <- ggplot(ca_average, aes(x = date, y=DSCI)) +
-              geom_line() +
-              geom_point(size = 3) + 
+              geom_line(color = "darkred") +
+              geom_point(color = "darkred", size = 3) + 
               geom_text(aes(label = max, x = date), y=500, size=5, 
                         family = "PT Serif") +
               geom_hline(aes(yintercept = DSCI), linetype = 2, color = "grey") + 
