@@ -1,6 +1,6 @@
 ################################################################################
 # author: Jahred Liddie (@jmliddie)
-# purpose: tidytuesday, week of 06-07-2022
+# purpose: tidytuesday, week of 06-14-2022
 ################################################################################
 library(tidyverse)
 library(gganimate)
@@ -17,6 +17,7 @@ ca_average <- california %>%
   group_by(date) %>%
   summarise(DSCI = mean(DSCI))
 
+# around the peak
 ca_average$max <- ifelse(ca_average$DSCI >= max(ca_average$DSCI) - 0.05*max(ca_average$DSCI), 
                          "Peak of 2011-2017 drought",
                          "")
