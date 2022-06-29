@@ -58,7 +58,7 @@ ggplot(paygap.summary, aes(x = year, y = diff_mean_hourly_percent,
     segment.ncp = 3,
     segment.angle = 20
   ) +
-  scale_color_manual(values = MetBrewer::met.brewer("Tam", n = 6)) +
+  scale_color_manual(values = c("goldenrod", MetBrewer::met.brewer("Tam", n = 6)[2:6])) +
   coord_cartesian(
     clip = "off",
   ) +
@@ -83,12 +83,12 @@ ggplot(paygap.summary, aes(x = year, y = diff_mean_hourly_percent,
         plot.background = element_rect(fill = "grey98", color = "grey98"),
         panel.background = element_rect(fill = "grey98", color = "grey98"),
         plot.title = element_text(hjust = 0.5, size = 34, family = "Arvo", face = "bold"),
-        plot.subtitle = element_text(
+        plot.subtitle  = element_text(
           family = "Arvo",
           size = 22,
           lineheight = 1.5, 
           hjust = 0.5),
         axis.text = element_text(size = 18, family = "Arvo"),
-        plot.caption = element_text(size = 12, family = "Arvo", hjust = 0))
+        plot.caption = element_text(size = 15, family = "Arvo", hjust = 0))
 
 ggsave("2022/2022 - Week 15/paygap.png", dpi = 400, width = 5, height = 3.5)        
