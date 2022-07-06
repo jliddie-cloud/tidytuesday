@@ -74,7 +74,7 @@ all.locations <- all.locations %>%
 rent_grid <- left_join(grid_fine, all.locations)
 
 # latest 5 years
-rent_grid <- subset(rent_grid, year <= 2018 & year >= 2013)
+rent_grid <- subset(rent_grid, year <= 2018 & year >= 2015)
 
 # nice font
 font_add_google("Patua One")
@@ -97,6 +97,7 @@ ggmap(sf_basemap) +
        caption = "Visualization by @jmliddie | #tidytuesday week 27 | Data: Pennington, Kate (2018). Bay Area Craigslist Rental Housing Posts (2000-2018). Basemap from OpenStreetMap.") +
   theme(
         axis.text = element_blank(),
+        # plot.margin = margin(10, 10, 10, 10),
         legend.key.height = unit(0.6, 'cm'),
         legend.key.width= unit(0.1, 'cm'),
         legend.direction = "vertical",
@@ -105,8 +106,8 @@ ggmap(sf_basemap) +
         legend.text = element_text(size = 20, family = "Patua One"),
         plot.title = element_text(size = 40, hjust = 0, family = "Patua One"),
         strip.text = element_text(size = 30, family = "Patua One"),
-        plot.caption = element_text(size = 20, hjust = 0, family = "Patua One")
+        plot.caption = element_text(size = 16, hjust = 0, family = "Patua One")
         )
 
-ggsave("2022/2022 - Week 16/sf_rents.png", dpi = 600, width = 4, height = 4,
+ggsave("2022/2022 - Week 16/sf_rents.png", dpi = 600, width = 4.2, height = 4,
        bg = "white")        
