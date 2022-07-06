@@ -10,8 +10,6 @@ library(showtext)
 
 rents <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-07-05/rent.csv')
 
-nhoods <- read_sf("2022/2022 - Week 16/Realtor Neighborhoods/geo_export_dd9c525d-79b6-4b60-ac83-df9d56e1100c.shp")
-
 # unique neighborhoods with only one bedrooms among units without lat/lon
 nhoods.rents <- rents %>%
   filter( (is.na(lat) | is.na(lon)) & beds == 1) %>%
@@ -41,7 +39,9 @@ complete.locations <- rents %>%
 # join all locations together
 all.locations <- rbind(complete.locations, nhoods.rents)
 
-all.locations <- st_as_sf(all.locations, coords = c("lon", "lat"), crs = st_crs(nhoods))
+# crs retrived from: spatialreference.org
+all.locations <- st_as_sf(all.locations, coords = c("lon", "lat"), 
+                          crs = "+proj=aea +lat_1=34 +lat_2=40.5 +lat_0=0 +lon_0=-120 +x_0=0 +y_0=-4000000 +ellps=GRS80 +datum=NAD83 +units=m +no_defs")
 
 # make a grid of nhoods
 limits <- st_bbox(all.locations)
@@ -93,8 +93,8 @@ ggmap(sf_basemap) +
                    colors = rev(MetBrewer::met.brewer("OKeeffe1")),
                    labels = function(x) scales::dollar(x/1000, suffix = "k")) +
   labs(x = "", y = "",
-       title = "Median prices of one-bedroom listings in the Bay Area (2013-2018)",
-       caption = "Visualization by @jmliddie | #tidytuesday week 27 | Data: Pennington, Kate (2018). Bay Area Craigslist Rental Housing Posts.") +
+       title = "Median prices of one-bedroom rentals in the Bay Area (2013-2018)",
+       caption = "Visualization by @jmliddie | #tidytuesday week 27 | Data: Pennington, Kate (2018). Bay Area Craigslist Rental Housing Posts (2000-2018). Basemap from OpenStreetMap.") +
   theme(
         axis.text = element_blank(),
         legend.key.height = unit(0.6, 'cm'),
