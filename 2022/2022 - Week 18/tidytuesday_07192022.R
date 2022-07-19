@@ -53,12 +53,12 @@ ggplot(US.energy, aes(x = year, y = value, fill = plot.name)) +
         axis.text.x = element_text(size = 40, face = "bold", family = "Koulen", color = "black"),
         legend.title = element_blank(),
         legend.text = element_text(size = 40, family = "Koulen"),
-        legend.spacing.x = unit(0.2, 'cm'),
+        legend.spacing.x = unit(0.4, 'cm'),
         legend.spacing.y = unit(0.2, 'cm'),
         panel.grid.major.y =element_blank(),
         panel.grid.minor.y =element_blank(), 
-        plot.title =  element_text(size = 65, hjust = 0.5, family = "Koulen"),
-        plot.margin=unit(c(0.5,1,0.5,1),"cm"),
+        plot.title =  element_text(size = 70, hjust = 0.5, family = "Koulen"),
+        plot.margin=unit(c(0.5,0.5,0.25,0.5),"cm"),
         plot.caption = element_text(size = 30, hjust = 0, family = "Koulen", margin=margin(t = 0.25, unit = "cm")),
         plot.background = element_rect(fill = "lightgrey")
   )
