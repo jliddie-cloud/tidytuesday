@@ -83,12 +83,12 @@ state.counties +
   scale_fill_manual(name = "", 
                     values = c("Top 50%" = "green", 
                                "Bottom 50%" = "white")) +
-  labs(title = paste("Half of the US population lives in these", 
-                     sum(decennial$pop_group=="Top 50%"), "counties"),
+  labs(title = paste("50% of the US population lives in ", 
+                     round(sum(decennial$pop_group=="Top 50%")/nrow(decennial)*100,0), "% of the counties", sep = ""),
        caption = "Visualization by @jmliddie | #tidytuesday week 30 | Data from the 2010-2020 US Census") +
   theme(panel.background = element_rect(color = "white", fill = "white"),
         legend.position = "none",
-        plot.title =  element_text(size = 40, hjust = 0.5, family = "Secular One"),
+        plot.title =  element_text(size = 50, hjust = 0.5, family = "Secular One"),
         plot.margin=unit(c(0.5,0.5,0.25,0.5),"cm"),
         plot.caption = element_text(size = 18, hjust = 0, 
                                     family = "Secular One", color = "darkgrey",
