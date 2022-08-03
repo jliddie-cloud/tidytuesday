@@ -63,7 +63,7 @@ ggmap(basemap) +
         plot.title = element_markdown(size = 80, lineheight = 0.1, family = "DM Serif Display"),
         plot.margin = unit(c(0.1,0.1,0.1,0.1), "cm"),
         plot.caption = element_text(color = "black", size = 35, hjust = 0, margin=margin(0.1), family = "DM Serif Display"),
-        panel.border = element_blank(),
+        panel.border = element_rect(colour = "black", fill=NA, size = 2),
         panel.background = element_blank())
   
 ggsave("2022/2022 - Week 20/frog_map.png", dpi = 600, width = 5, height = 5,
