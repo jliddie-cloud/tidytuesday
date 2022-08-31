@@ -2,7 +2,6 @@
 # author: Jahred Liddie (@jmliddie)
 # purpose: tidytuesday, week of 08-30-2022
 ################################################################################
-
 library(tidyverse)
 library(sf)
 library(showtext)
@@ -13,7 +12,7 @@ pell <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidyt
 # loading hexgrid from https://team.carto.com/u/andrew/tables/andrew.us_states_hexgrid/public/map
 hex <- st_read("2022/2022 - Week 22/data/us_states_hexgrid.geojson")
 
-# load some inflation data from the WB and format
+# load some inflation data from the World Bank and format
   inflation <- read.csv("2022/2022 - Week 22/data/us_inflation.csv")
   inflation$date <- as.Date(inflation$date, format = "%Y-%m-%d")
   inflation$year <- lubridate::year(inflation$date)
@@ -22,7 +21,7 @@ hex <- st_read("2022/2022 - Week 22/data/us_states_hexgrid.geojson")
   
   inflation <- inflation %>%
     mutate(denom = 1 + inflation_rate/100,
-           sum_denom = cumprod(denom)) # denominator for inflation adjustment calculation (i.e., a cumulative product)
+           sum_denom = cumprod(denom)) # denominator for inflation adjustment calculation
 
 # state abbreviations
 states <- tibble(name = state.name, abbr = state.abb)
@@ -37,10 +36,11 @@ state_awards <- pell %>%
   ungroup()
 
 state_awards <- state_awards %>%
-  filter(STATE %in% states$abbr)
+  filter(STATE %in% states$abbr) # continential US only
 
 state_awards <- left_join(state_awards, inflation %>% select(YEAR = year, sum_denom))
 
+# adjusted for inflation
 state_awards <- state_awards %>%
   mutate(apr = award / recipient,
          apr_adjusted = apr/sum_denom)
@@ -56,6 +56,7 @@ state_awards <- state_awards %>%
 
   hex <- left_join(hex, state_awards, by = c("abbr" = "STATE"))
   
+  # labels at center of hexagons
   centroids <- st_centroid(hex)
   
   centroids <-  centroids %>%
@@ -64,7 +65,8 @@ state_awards <- state_awards %>%
   
   centroids <- left_join(centroids, state_awards, 
                          by = c("abbr" = "STATE"))
-  
+
+# create gif
 anim.pell <-
   ggplot(hex) + 
     geom_sf(aes(fill = apr_adjusted)) + 
@@ -86,18 +88,21 @@ anim.pell <-
           legend.justification = "center",
           legend.key.height = unit(0.5, 'cm'),
           legend.key.width= unit(1.6, 'cm'),
-          legend.title = element_text(size = 8),
-          plot.title = element_text(hjust = 0, size = 20, 
-                                    face = "bold"),
+          legend.title = element_text(size = 8, color = "white"),
+          plot.title = element_text(hjust = 0, size = 18, 
+                                    face = "bold", color = "white"),
+          legend.background = element_rect(fill = "black"),
+          legend.text = element_text(color = "white"),
           plot.subtitle = element_text(hjust = 0, size = 10, 
-                                       lineheight = 2),
-          plot.caption = element_text(hjust=0, color = "darkgrey", 
-                                      lineheight = 2, size = 8)) +
+                                       lineheight = 2, color = "white"),
+          plot.caption = element_text(hjust=0, color = "white", 
+                                      lineheight = 2, size = 5),
+          plot.background = element_rect(fill = "black")) +
     guides(fill = guide_colourbar(ticks = FALSE, title.position = "top")) +
   transition_manual(YEAR)
 
 # save plot
-animate(anim.pell, nframes = 400, fps = 30, width = 7, height = 5, units = "in",
-        res = 200,
+animate(anim.pell, nframes = 400, fps = 30, width = 5, height = 4, units = "in",
+        res = 200, bg = "black",
         renderer = gifski_renderer("2022/2022 - Week 22/pell.gif"))
 
