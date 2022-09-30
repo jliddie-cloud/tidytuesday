@@ -63,8 +63,8 @@ font_add_google("Kanit")
 showtext_auto(enable = TRUE)
 
 ggplot(state.summaries, aes(x = type.clean, y = value)) +
-  geom_flow(aes(alluvium = POC), lty = 3, fill = "white", color = "black",
-            curve_type = "linear", width = 0.5) +
+  geom_flow(aes(alluvium = POC), lty = 2, fill = "white", color = "black",
+            curve_type = "linear", width = 0.5, size = 0.15) +
   geom_col(aes(fill = POC), width = 0.5, color = "black", size = 0.25) +
   scale_fill_manual(values = c("#a40062","grey"), name = "") +
   labs(x = "", y = "", title = "In every US state, <span style = 'color: #a40062;'>people of color</span> make up a lesser share of artists than all workers",
