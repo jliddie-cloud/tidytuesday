@@ -14,7 +14,7 @@ artists <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 states <- rbind(
   data.frame(state = datasets::state.name, 
              state.abb = datasets::state.abb),
-  data.frame(state = c("District of Columbia", "Puerto Rico"),
+  data.frame(state = c("District\nof Columbia", "Puerto Rico"),
              state.abb = c("DC", "PR"))
 )
 
