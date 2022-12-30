@@ -50,7 +50,7 @@ ggplot(total_retail, aes(x = date, y = change_yoy,
     nudge_y = ifelse(total_retail$date == "2020-01-01", 20, -20)
   ) +
   labs(x = "", y = "YOY change", title = "The COVID-19 pandemic has had a profound impact on US retail sales",
-       subtitle = "YOY changes in the <span style = 'color: darkblue;'>**US overall**</span> and <span style = 'color: grey;'>each US state</span>",
+       subtitle = "YOY changes in total retail sales in the <span style = 'color: darkblue;'>**US overall**</span> and <span style = 'color: grey;'>each US state</span>",
        caption = "Visualization by @jmliddie | #tidytuesday week 50 | Data from the United States Census Bureau") +
   ggthemes::theme_fivethirtyeight() +
   theme(plot.title = element_text(hjust = 0.5, lineheight = 2, size = 100, 
