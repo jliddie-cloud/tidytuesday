@@ -67,7 +67,7 @@ anim.map <- ggplot(europe, aes(fill = CL)) +
                                                 lineheight = 1.4,),
                       plot.subtitle = element_text(hjust = 0, size = 10, 
                                                    family = "Raleway",
-                                                   lineheight = 1.4,),
+                                                   lineheight = 1.4),
                       plot.caption = element_text(hjust=0, color = "darkgrey", 
                                                   family = "Raleway",
                                                   lineheight = 1.4, size = 8)) +
