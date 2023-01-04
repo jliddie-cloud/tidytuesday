@@ -161,6 +161,7 @@ anim.HUC <-
   guides(fill = guide_colourbar(ticks = FALSE, title.position = "top")) +
   transition_manual(spatial_autocorr)
   
+
 # getting font warnings but seems to be working...now save
 animate(anim.HUC, nframes = 400, fps = 30, width = 5, height = 4, units = "in",
         res = 300, bg = "black",
