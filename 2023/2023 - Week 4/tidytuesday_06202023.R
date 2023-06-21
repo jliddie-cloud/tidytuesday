@@ -12,7 +12,7 @@ library(gganimate)
 
 ufo_sightings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/ufo_sightings.csv')
 places <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-20/places.csv')
-img <- paste("2023/2023 - Week 4/images/", list.files("2023/2023 - Week 4/images/"), sep ="")
+img <- paste("2023/2023 - Week 4/images/", list.files("2023/2023 - Week 4/images/"), sep ="") # these were separately downloaded by me
   
 # massachusetts only
 MA_sightings <- ufo_sightings %>%
@@ -56,7 +56,7 @@ anim.UFO <- ggmap(basemap) +
         panel.background = element_rect(fill = "black"),
         plot.title = element_text(size = 20, hjust = 0.5,
                                   margin = margin(10, 10, 10, 10), color = "white", family = "Teko"),
-        plot.caption = element_text(size = 12, hjust = 0,
+        plot.caption = element_text(size = 12, hjust = 0.05,
                                     margin = margin(5, 5, 5, 5), color = "white", family = "Teko")
   ) +
   transition_manual(year_day_month)
