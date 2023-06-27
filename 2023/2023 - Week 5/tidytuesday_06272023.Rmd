@@ -1,0 +1,110 @@
+---
+title: "U.S. Populated Places in Middlesex and Suffolk, MA"
+author: "@jahredwithhanh"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE,  results='hide'}
+library(leaflet)
+library(sf)
+library(maps)
+library(tidyverse)
+library(ggthemes)
+library(ggspatial)
+library(htmlwidgets)
+
+us_place_names <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-27/us_place_names.csv')
+us_place_history <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-06-27/us_place_history.csv')
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The interactive map below shows U.S. populated places in two counties in Massachusetts (Middlesex and Suffolk). Data are from the National Map Staged Products Directory, created by the US Board of Geographic Names. County boundaries are also shown.
+
+To change layers, click on the panel in the bottom right. Click a point to read historical information, if available.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+us_place_names <- us_place_names %>% filter(!is.na(prim_lat_dec) & !is.na(prim_long_dec))
+
+us_place_names <- st_as_sf(us_place_names, coords = c("prim_long_dec", "prim_lat_dec"),
+                           crs = "NAD83")
+
+# suffolk places
+suffolk_places <- us_place_names %>% 
+  filter(state_name == "Massachusetts" & county_name == "Suffolk")
+
+suffolk_places <- left_join(suffolk_places, us_place_history)
+
+limits <- st_bbox(suffolk_places)
+
+suffolk_places <- suffolk_places %>%
+  mutate(map_desc = case_when(is.na(history) ~ paste("<B>", feature_name, "</B>", sep = ""),
+                              !is.na(history) ~ paste("<B>", feature_name, "</B>:<br/>", history, sep = ""))
+         )
+
+# now Middlesex places:
+middlesex_places <- us_place_names %>% 
+  filter(state_name == "Massachusetts" & county_name == "Middlesex")
+
+middlesex_places <- left_join(middlesex_places, us_place_history)
+
+middlesex_places <- middlesex_places %>%
+  mutate(map_desc = case_when(is.na(history) ~ paste("<B>", feature_name, "</B>", sep = ""),
+                              !is.na(history) ~ paste("<B>", feature_name, "</B>:<br/>", history, sep = ""))
+         )
+
+# also quickly get county boundaries, then drop any outside boundaries
+counties <- tidycensus::get_acs(geography = "county", variables = "B19013_001",
+                                state = "MA", county = c("Middlesex", "Suffolk"),
+                                geometry = TRUE)
+
+
+suffolk_places <- suffolk_places[counties, ]
+middlesex_places <- middlesex_places[counties, ]
+```
+
+
+```{r, echo=FALSE, warning=FALSE, out.width = '100%'}
+map1 <- leaflet() %>%
+  addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
+  
+  # counties
+  addPolygons(data = counties, 
+              fillColor = "white", stroke = TRUE, 
+              color = "grey", weight = 1,
+              fillOpacity = 0.2, group = "Counties",
+              popup = counties$NAME)  %>%
+  
+  # points
+  addCircleMarkers(data = suffolk_places, radius = 4, group = "Suffolk places",
+             weight = 3,
+             color = "black", fillColor = "green", fillOpacity = 1,
+             label = suffolk_places$feature_name,
+             popup = suffolk_places$map_desc) %>%
+  
+  addCircleMarkers(data = middlesex_places, radius = 4, group = "Middlesex places",
+           weight = 3,
+           color = "black", fillColor = "blue", fillOpacity = 1,
+           label = middlesex_places$feature_name,
+           popup = middlesex_places$map_desc) %>%
+  
+  # all layer control
+  addLayersControl(
+    position = "bottomright",
+    baseGroups = "Counties",
+    overlayGroups = c("Suffolk places", "Middlesex places"),
+    options = layersControlOptions(collapsed = TRUE)) %>%
+   setMaxBounds(lng1 = as.numeric(limits[1]) - 0.5,
+                lat1 = as.numeric(limits[2]) - 0.5,
+                lng2 = as.numeric(limits[3]) + 0.5,
+                lat2 = as.numeric(limits[4]) + 0.5
+                )
+
+map1
+```
+
+**#TidyTuesday week 26 \| `@jahredwithanh` \| Data from the US Board of Geographic Names**
