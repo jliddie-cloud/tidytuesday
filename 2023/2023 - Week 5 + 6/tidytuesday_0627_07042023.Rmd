@@ -133,10 +133,10 @@ map1 <- leaflet() %>%
     overlayGroups = c("Suffolk places",  "Suffolk historical markers", 
                       "Middlesex places", "Middlsesex historical markers"),
     options = layersControlOptions(collapsed = TRUE)) %>%
-   setMaxBounds(lng1 = as.numeric(limits[1]) - 0.5,
-                lat1 = as.numeric(limits[2]) - 0.5,
-                lng2 = as.numeric(limits[3]) + 0.5,
-                lat2 = as.numeric(limits[4]) + 0.5
+   setMaxBounds(lng1 = as.numeric(limits[1]) - 0.75,
+                lat1 = as.numeric(limits[2]) - 0.75,
+                lng2 = as.numeric(limits[3]) + 0.75,
+                lat2 = as.numeric(limits[4]) + 0.75
                 )
 
 map1
