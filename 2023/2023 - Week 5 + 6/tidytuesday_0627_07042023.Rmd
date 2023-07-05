@@ -1,0 +1,145 @@
+---
+title: "Populated Places & Historical Markers in Middlesex and Suffolk, MA"
+author: "@jahredwithanh"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE,  results='hide'}
+library(leaflet)
+library(sf)
+library(maps)
+library(tidyverse)
+library(ggthemes)
+library(ggspatial)
+library(htmlwidgets)
+
+us_places <- tidytuesdayR::tt_load("2023-06-27")
+
+us_place_names <- us_places$us_place_names
+
+us_place_history <- us_places$us_place_history
+
+hist <- tidytuesdayR::tt_load('2023-07-04')
+
+hist <- hist$historical_markers
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The interactive map below shows U.S. populated places and historical markers in two counties in Massachusetts (Middlesex and Suffolk). Data are from the National Map Staged Products Directory (US Board of Geographic Names) and the [Historical Marker Database USA Index](https://www.hmdb.org/). County boundaries are also shown.
+
+To change layers, click on the panel in the bottom right. Click a point to read historical information or access other links, if available.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+us_place_names <- us_place_names %>% filter(!is.na(prim_lat_dec) & !is.na(prim_long_dec))
+
+us_place_names <- st_as_sf(us_place_names, coords = c("prim_long_dec", "prim_lat_dec"),
+                           crs = "NAD83")
+
+# suffolk places
+suffolk_places <- us_place_names %>% 
+  filter(state_name == "Massachusetts" & county_name == "Suffolk")
+
+suffolk_places <- left_join(suffolk_places, us_place_history)
+
+limits <- st_bbox(suffolk_places)
+
+suffolk_places <- suffolk_places %>%
+  mutate(map_desc = case_when(is.na(history) ~ paste("<B>", feature_name, "</B>", sep = ""),
+                              !is.na(history) ~ paste("<B>", feature_name, "</B>:<br/>", history, sep = ""))
+         )
+
+# now Middlesex places:
+middlesex_places <- us_place_names %>% 
+  filter(state_name == "Massachusetts" & county_name == "Middlesex")
+
+middlesex_places <- left_join(middlesex_places, us_place_history)
+
+middlesex_places <- middlesex_places %>%
+  mutate(map_desc = case_when(is.na(history) ~ paste("<B>", feature_name, "</B>", sep = ""),
+                              !is.na(history) ~ paste("<B>", feature_name, "</B>:<br/>", history, sep = ""))
+         )
+
+# also quickly get county boundaries, then drop any outside boundaries
+counties <- tidycensus::get_acs(geography = "county", variables = "B19013_001",
+                                state = "MA", county = c("Middlesex", "Suffolk"),
+                                geometry = TRUE)
+
+
+suffolk_places <- suffolk_places[counties, ]
+middlesex_places <- middlesex_places[counties, ]
+
+# now clean the hist markers data
+suffolk_hist <- hist %>% filter(grepl("^Suffolk", county_or_parish) & state_or_prov == "Massachusetts")
+
+suffolk_hist <- st_as_sf(suffolk_hist, coords = c("longitude_minus_w", "latitude_minus_s"),
+                           crs = "NAD83")
+  
+middlesex_hist <- hist %>% filter(grepl("^Middlesex", county_or_parish) & state_or_prov == "Massachusetts")
+
+middlesex_hist <- st_as_sf(middlesex_hist, coords = c("longitude_minus_w", "latitude_minus_s"),
+                           crs = "NAD83")
+
+# format icons
+Suffolk_hist_icons <- awesomeIcons(library = "ion",
+                                   icon = "flag", markerColor = "green",
+                                   iconColor = "black")
+Middlesex_hist_icons <- awesomeIcons(library = "ion",
+                                     icon = "flag", markerColor = "blue",
+                                     iconColor = "black")
+
+```
+
+```{r, echo=FALSE, warning=FALSE, out.width = '100%'}
+map1 <- leaflet() %>%
+  addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
+  
+  # counties
+  addPolygons(data = counties, weight = 3,
+              fillColor = "white", stroke = TRUE, 
+              color = "black", group = "Counties",
+              popup = counties$NAME)  %>%
+  
+  # points
+  addCircleMarkers(data = suffolk_places, radius = 4, group = "Suffolk places",
+                   weight = 3, color = "black", fillColor = "green", fillOpacity = 1,
+                   label = suffolk_places$feature_name,
+                   popup = suffolk_places$map_desc) %>%
+  
+  addCircleMarkers(data = middlesex_places, radius = 4, group = "Middlesex places",
+                   weight = 3, color = "black", fillColor = "blue", fillOpacity = 1,
+                   label = middlesex_places$feature_name,
+                   popup = middlesex_places$map_desc) %>%
+  
+  addAwesomeMarkers(data = suffolk_hist, group = "Suffolk historical markers",
+                    label = suffolk_hist$title,
+                    popup = paste(suffolk_hist$location, "<br/><a href='", suffolk_hist$link, 
+                                  "'>Learn more<a/>", sep = ""),
+                    icon = Suffolk_hist_icons) %>%
+  
+  addAwesomeMarkers(data = middlesex_hist, group = "Middlesex historical markers",
+                    label = middlesex_hist$title,
+                    popup = paste(middlesex_hist$location, "<br/><a href='", middlesex_hist$link, 
+                                  "'>Learn more<a/>", sep = ""),
+                    icon = Middlesex_hist_icons) %>%
+  
+  # all layer control
+  addLayersControl(
+    position = "bottomright",
+    overlayGroups = c("Suffolk places",  "Suffolk historical markers", 
+                      "Middlesex places", "Middlsesex historical markers"),
+    options = layersControlOptions(collapsed = TRUE)) %>%
+   setMaxBounds(lng1 = as.numeric(limits[1]) - 0.5,
+                lat1 = as.numeric(limits[2]) - 0.5,
+                lng2 = as.numeric(limits[3]) + 0.5,
+                lat2 = as.numeric(limits[4]) + 0.5
+                )
+
+map1
+```
+
+**#TidyTuesday week 26 + 27 \| [`@jahredwithanh`](https://twitter.com/jahredwithanh) \|**
