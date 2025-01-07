@@ -42,7 +42,7 @@ ggplot(ga_data, aes(x = Land, y = Date)) +
     axis.text.y = element_text(color = "black", size = 20,
                                margin = margin(t = 0, r = -10, b = 0, l = 10)),
     panel.background = element_rect(fill = "#e0d5c8", colour = "#e0d5c8"),
-    plot.title = element_text(hjust = 0.5, size = 38, lineheight = 0.5),
+    plot.title = element_text(hjust = 0.5, size = 38, lineheight = 0.3),
     plot.background = element_rect(fill = "#e0d5c8"),
     plot.caption = element_text(hjust = 0, color = "black",
                                 lineheight = 1.4, size = 18, margin = margin(t = 10, b = 5))
